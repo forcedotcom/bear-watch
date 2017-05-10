@@ -1,0 +1,16 @@
+html {
+  height: 100%;
+  background: #ffffff url('background.jpeg') no-repeat center;
+}
+
+.slds-page-header {
+  position: relative;
+  z-index: 10000;
+  background-color:rgba(244, 246, 249, 0.3);
+  color:#000000;
+}
+
+.slds-box {
+  background-color:rgba(244, 246, 249, 0.3);
+  color:#FFFFFF;
+}
