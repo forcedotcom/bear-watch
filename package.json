@@ -1,0 +1,50 @@
+{
+  "name": "bear-watch",
+  "version": "1.0.0",
+  "author": "Philippe Ozil",
+  "description": "Demonstration application for the 'Build an Instant Notification App' Trailhead project (an introduction to platform event).",
+  "license": "see LICENSE file",
+  "private": true,
+  "main": "server/server.js",
+  "dependencies": {
+    "salesforce-node-client": "^1.0.0",
+
+    "body-parser": "^1.4.3",
+    "express": "^4.4.5",
+    "express-session": "^1.13.0",
+    "underscore": "~1.8.3",
+    "request": "~2.81.0",
+
+    "@salesforce-ux/design-system": "^2.2.2",
+    "browserify": "^3.10.4",
+    "babel-preset-react": "^6.11.1",
+    "babelify": "^7.3.0",
+    "jquery": "^3.0.0",
+    "react": "^15.2.0",
+    "react-dom": "^15.2.0",
+    "uglify-js": "^2.7.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build:assets && npm run build:scripts",
+    "build:assets": "npm install && cp -r node_modules/@salesforce-ux/design-system/assets public",
+    "build:scripts": "mkdir -p public/scripts && browserify -t [ babelify --presets [ react ] ] client-src/scripts/*.js | uglifyjs > public/scripts/bundle.min.js",
+    "start": "node server/server.js",
+    "build-n-start": "npm run build && npm run start"
+  },
+  "keywords": [
+    "React",
+    "Salesforce",
+    "Force.com",
+    "Lightning",
+    "SLDS"
+  ],
+  "repository": "pozil/bear-watch",
+  "bugs": {
+    "url": "https://github.com/pozil/bear-watch/issues"
+  },
+  "homepage": "https://github.com/pozil/bear-watch",
+  "engines": {
+    "node": "6.2.x"
+  }
+}
