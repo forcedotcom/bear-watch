@@ -7,5 +7,6 @@ This application uses the following dependencies:
 - [Salesforce Node client](https://github.com/pozil/salesforce-node-client) library for Force.com OAuth 2.0 authentication and data interactions.
 - [Salesforce Lightning Design System](https://www.lightningdesignsystem.com) (SLDS).
 
-Background image source: https://w-dog.net/
-Bear footprint source: http://icons8.com
+## Credits
+Background image source: https://w-dog.net<br/>
+Bear footprint image source: http://icons8.com
