@@ -14,3 +14,11 @@ html {
   background-color:rgba(244, 246, 249, 0.3);
   color:#FFFFFF;
 }
+
+.credits {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 0 5px;
+  color: #9faab5;
+}

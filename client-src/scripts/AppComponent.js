@@ -37,6 +37,7 @@ var App = module.exports = React.createClass({
           :
           <NotificationPublisher/>
         }
+        <div className="credits">Image credits: w-dog.net, icons8.com</div>
       </div>
     );
   }
