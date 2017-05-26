@@ -136,7 +136,7 @@ app.get('/auth/logout', function(request, response) {
 app.get('/auth/whoami', function(request, response) {
   var curSession = getSession(request, response, false);
   if (curSession == null) {
-    response.send({"isLogged": false});
+    response.send({"isNotLogged": true});
     return;
   }
 

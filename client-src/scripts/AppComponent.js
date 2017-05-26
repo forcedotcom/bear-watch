@@ -19,7 +19,7 @@ var App = module.exports = React.createClass({
       url: '/auth/whoami',
       dataType: 'json',
       success: function(data) {
-        if (data.isLogged !== undefined) {
+        if (typeof data.isNotLogged === 'undefined') {
           this.setState({user: data});
         }
       }.bind(this),
