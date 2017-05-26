@@ -19,7 +19,9 @@ var App = module.exports = React.createClass({
       url: '/auth/whoami',
       dataType: 'json',
       success: function(data) {
-        this.setState({user: data});
+        if (data.isLogged !== undefined) {
+          this.setState({user: data});
+        }
       }.bind(this),
       error: function(xhr, status, err) {
         if (xhr.status != 401) // Ignore 'unauthorized' responses before logging in
