@@ -3,6 +3,7 @@ var httpClient = require("request"),
   path = require('path'),
   express = require('express'),
   session = require('express-session'),
+  pgSession = require('connect-pg-simple')(session),
   SalesforceClient = require('salesforce-node-client');
 
 // App dependencies
@@ -15,8 +16,14 @@ if (process.env.sfdcAuthConsumerSecret)
   config.sfdc.auth.consumerSecret = process.env.sfdcAuthConsumerSecret;
 if (process.env.sfdcAuthCallbackUrl)
   config.sfdc.auth.callbackUrl = process.env.sfdcAuthCallbackUrl;
+
 var sfdc = new SalesforceClient(config.sfdc);
 
+// Prepare command line overrides for server config
+if (process.env.isHttps)
+  config.server.isHttps = process.env.isHttps;
+if (process.env.sessionSecretKey)
+  config.server.sessionSecretKey = process.env.sessionSecretKey;
 
 // Setup HTTP server
 var app = express();
@@ -25,8 +32,12 @@ app.set('port', port);
 
 // Enable server-side sessions
 app.use(session({
+  store: new pgSession(), // Uses default DATABASE_URL
   secret: config.server.sessionSecretKey,
-  cookie: { secure: config.server.isHttps },
+  cookie: {
+    secure: config.server.isHttps,
+    maxAge: 60 * 60 * 1000 // 1 hour
+  },
   resave: false,
   saveUninitialized: false
 }));

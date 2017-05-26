@@ -38,7 +38,7 @@ config.server = {
   isHttps : false,
 
   // Secret key used to encrypt user sessions
-  sessionSecretKey : 'Fj2KM5-q8LHLuS3m'
+  sessionSecretKey : ''
 };
 
 
