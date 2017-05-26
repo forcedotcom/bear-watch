@@ -3,6 +3,7 @@ var httpClient = require("request"),
   path = require('path'),
   express = require('express'),
   session = require('express-session'),
+  pgSession = require('connect-pg-simple')(session),
   SalesforceClient = require('salesforce-node-client');
 
 // App dependencies
@@ -15,8 +16,14 @@ if (process.env.sfdcAuthConsumerSecret)
   config.sfdc.auth.consumerSecret = process.env.sfdcAuthConsumerSecret;
 if (process.env.sfdcAuthCallbackUrl)
   config.sfdc.auth.callbackUrl = process.env.sfdcAuthCallbackUrl;
+
 var sfdc = new SalesforceClient(config.sfdc);
 
+// Prepare command line overrides for server config
+if (process.env.isHttps)
+  config.server.isHttps = (process.env.isHttps === 'true');
+if (process.env.sessionSecretKey)
+  config.server.sessionSecretKey = process.env.sessionSecretKey;
 
 // Setup HTTP server
 var app = express();
@@ -25,8 +32,12 @@ app.set('port', port);
 
 // Enable server-side sessions
 app.use(session({
+  store: new pgSession(), // Uses default DATABASE_URL
   secret: config.server.sessionSecretKey,
-  cookie: { secure: config.server.isHttps },
+  cookie: {
+    secure: config.server.isHttps,
+    maxAge: 60 * 60 * 1000 // 1 hour
+  },
   resave: false,
   saveUninitialized: false
 }));
@@ -39,13 +50,15 @@ app.use('/', express.static(path.join(__dirname, '../public')));
 *  Attemps to retrieves the server session.
 *  If there is no session, redirects with HTTP 401 and an error message
 */
-function getSession(request, response) {
-  var session = request.session;
-  if (!session.sfdcAuth) {
-    response.status(401).send('No active session');
+function getSession(request, response, isRedirectOnMissingSession) {
+  var curSession = request.session;
+  if (!curSession.sfdcAuth) {
+    if (isRedirectOnMissingSession) {
+      response.status(401).send('No active session');
+    }
     return null;
   }
-  return session;
+  return curSession;
 }
 
 
@@ -93,12 +106,12 @@ app.get('/auth/callback', function(request, response) {
 * Logout endpoint
 */
 app.get('/auth/logout', function(request, response) {
-  var session = getSession(request, response);
-  if (session == null)
+  var curSession = getSession(request, response, false);
+  if (curSession == null)
     return;
 
   // Revoke OAuth token
-  sfdc.auth.revoke({token: session.sfdcAuth.access_token}, function(error) {
+  sfdc.auth.revoke({token: curSession.sfdcAuth.access_token}, function(error) {
     if (error) {
       console.error('Force.com OAuth revoke error: '+ JSON.stringify(error));
       response.status(500).json(error);
@@ -106,7 +119,7 @@ app.get('/auth/logout', function(request, response) {
     }
 
     // Destroy server-side session
-    session.destroy(function(error) {
+    curSession.destroy(function(error) {
       if (error)
         console.error('Force.com session destruction error: '+ JSON.stringify(error));
     });
@@ -121,12 +134,14 @@ app.get('/auth/logout', function(request, response) {
 * Endpoint for retrieving currently connected user
 */
 app.get('/auth/whoami', function(request, response) {
-  var session = getSession(request, response);
-  if (session == null)
+  var curSession = getSession(request, response, false);
+  if (curSession == null) {
+    response.send({"isNotLogged": true});
     return;
+  }
 
   // Request user info from Force.com API
-  sfdc.data.getLoggedUser(session.sfdcAuth, function (error, userData) {
+  sfdc.data.getLoggedUser(curSession.sfdcAuth, function (error, userData) {
     if (error) {
       console.log('Force.com identity API error: '+ JSON.stringify(error));
       response.status(500).json(error);
@@ -142,11 +157,11 @@ app.get('/auth/whoami', function(request, response) {
 * Endpoint for publishing a platform event on Force.com
 */
 app.post('/publish', function(request, response) {
-  var session = getSession(request, response);
-  if (session == null)
+  var curSession = getSession(request, response, true);
+  if (curSession == null)
     return;
 
-  var apiRequestOptions = sfdc.data.createDataRequest(session.sfdcAuth, 'sobjects/Notification__e');
+  var apiRequestOptions = sfdc.data.createDataRequest(curSession.sfdcAuth, 'sobjects/Notification__e');
   apiRequestOptions.body = {"Message__c" : "Watch out, bear spotted!"};
   apiRequestOptions.json = true;
 
