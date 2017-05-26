@@ -52,7 +52,7 @@ app.use('/', express.static(path.join(__dirname, '../public')));
 */
 function getSession(request, response, isRedirectOnMissingSession) {
   var curSession = request.session;
-  if (!curSession.sfdcAuth && ) {
+  if (!curSession.sfdcAuth) {
     if (isRedirectOnMissingSession) {
       response.status(401).send('No active session');
     }
