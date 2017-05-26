@@ -51,13 +51,16 @@ app.use('/', express.static(path.join(__dirname, '../public')));
 *  If there is no session, redirects with HTTP 401 and an error message
 */
 function getSession(request, response, isRedirectOnMissingSession) {
+  console.log('Getting session');
   var curSession = request.session;
   if (!curSession.sfdcAuth) {
+    console.log('No session found');
     if (isRedirectOnMissingSession) {
       response.status(401).send('No active session');
     }
     return null;
   }
+  console.log('Session found: '+ JSON.stringify(curSession));
   return curSession;
 }
 
@@ -135,8 +138,10 @@ app.get('/auth/logout', function(request, response) {
 */
 app.get('/auth/whoami', function(request, response) {
   var curSession = getSession(request, response, false);
-  if (curSession == null)
+  if (curSession == null) {
+    response.send(null);
     return;
+  }
 
   // Request user info from Force.com API
   sfdc.data.getLoggedUser(curSession.sfdcAuth, function (error, userData) {
