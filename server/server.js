@@ -21,7 +21,7 @@ var sfdc = new SalesforceClient(config.sfdc);
 
 // Prepare command line overrides for server config
 if (process.env.isHttps)
-  config.server.isHttps = process.env.isHttps;
+  config.server.isHttps = (process.env.isHttps === 'true');
 if (process.env.sessionSecretKey)
   config.server.sessionSecretKey = process.env.sessionSecretKey;
 
