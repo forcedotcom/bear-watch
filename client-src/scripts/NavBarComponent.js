@@ -17,7 +17,7 @@ var NavBar = module.exports = React.createClass({
               </div>
               <div className="slds-media__body">
                 <p className="slds-page-header__title slds-truncate slds-align-middle" title="Salesforce React Integration">Bear Watch</p>
-                <p className="page-header__info">An application to warn felow campers about bears.</p>
+                <p className="page-header__info">An application to warn fellow campers about bears.</p>
               </div>
             </div>
           </div>
