@@ -5,13 +5,9 @@
   "description": "Demonstration application for the 'Build an Instant Notification App' Trailhead project (an introduction to platform event).",
   "license": "see LICENSE file",
   "private": true,
-  "main": "server/server.js",
   "dependencies": {
     "@salesforce-ux/design-system": "^2.2.2",
-    "babel-preset-react": "^6.24.1",
-    "babelify": "^7.3.0",
     "body-parser": "^1.19.0",
-    "browserify": "^3.10.4",
     "connect-pg-simple": "^6.2.1",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
@@ -20,8 +16,13 @@
     "react-dom": "^15.2.0",
     "request": "~2.88.2",
     "salesforce-node-client": "^1.2.3",
-    "uglify-js": "^2.7.0",
     "underscore": "~1.12.1"
+  },
+  "devDependencies": {
+    "uglify-js": "^2.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browserify": "^3.10.4"
   },
   "scripts": {
     "build": "npm run build:assets && npm run build:scripts",
