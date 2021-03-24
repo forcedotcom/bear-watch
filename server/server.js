@@ -37,8 +37,10 @@ app.use(session({
   store: new pgSession({
     conObject: {
       connectionString: process.env.DATABASE_URL,
-      ssl: true,
-    },
+      ssl: {
+        rejectUnauthorized: false
+      }
+    }
   }),
   secret: config.server.sessionSecretKey,
   cookie: {
