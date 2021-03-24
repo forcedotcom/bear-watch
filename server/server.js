@@ -1,5 +1,5 @@
 // 3rd party dependencies
-var httpClient = require("request"),
+var httpClient = require('request'),
   path = require('path'),
   express = require('express'),
   session = require('express-session'),
@@ -34,10 +34,14 @@ app.set('port', port);
 
 // Enable server-side sessions
 app.use(session({
-  store: new pgSession(), // Uses default DATABASE_URL
+  store: new pgSession({
+    conObject: {
+      connectionString: process.env.DATABASE_URL,
+      ssl: true,
+    },
+  }),
   secret: config.server.sessionSecretKey,
   cookie: {
-    secure: config.server.isHttps,
     maxAge: 60 * 60 * 1000 // 1 hour
   },
   resave: false,
