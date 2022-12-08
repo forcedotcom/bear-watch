@@ -9,7 +9,7 @@
     "@salesforce-ux/design-system": "^2.2.2",
     "body-parser": "^1.19.0",
     "connect-pg-simple": "^6.2.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.17.1",
     "jquery": "^3.6.0",
     "react": "^15.2.0",
