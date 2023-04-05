@@ -1,7 +1,7 @@
 # Bear Watch
 
 ## About
-Heroku demonstration app for the "Build an Instant Notification App" Trailhead project (an introduction to platform events).
+Heroku demonstration app for the [Build an Instant Notification App](https://trailhead.salesforce.com/content/learn/projects/workshop-platform-events) Trailhead project (an introduction to platform events).
 
 This application uses the following dependencies (non-exhaustive):
 - [Salesforce Node client](https://github.com/pozil/salesforce-node-client) a Node library for Force.com OAuth 2.0 authentication and data interactions.
